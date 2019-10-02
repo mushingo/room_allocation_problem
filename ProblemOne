@@ -1,0 +1,47 @@
+package adsa2p1;
+import java.util.*;
+import java.io.*;
+
+public class ProblemOne {
+
+	public static void main(String[] args) throws Exception {
+		String ls = System.getProperty("line.separator");
+		long startTime = System.nanoTime();
+		Graph graph = new Graph(args[0] + ".in");
+		FileWriter output = new FileWriter(args[0] + ".out");
+		System.out.printf("Graph built in %.4fs\n", (( System.nanoTime() - startTime) / 1000000000.0));
+		
+		switch (args[1]) {
+		case "greedy":
+			System.out.print("Ran Greedy in ");
+			graph.greedy();
+			break;			
+		case "optimal":
+			int i;
+			graph.greedy();
+			ArrayList<Integer> order = new ArrayList<Integer>();
+			for (i = 0; i < graph.coursesNo; i++) {
+				order.add(i);
+			}
+			System.out.printf("Generating...");
+			graph.perm(order, new ArrayList<Integer>(), new boolean[order.size()], order.size(), 0, startTime);
+			
+			System.out.print(" finished\nRan Optimal in");
+			graph.clearRooms();
+			graph.greedyOrder(graph.bestOrder);	
+			break;
+		default:
+			System.out.println("Invalid second arg");
+	
+	}
+		System.out.printf(" %.2fs\n", (( System.nanoTime() - startTime) / 1000000000.0));
+		
+		//output.write((graph.bestOrder) + ls);	
+		output.write((graph.totalRooms) + ls);	
+		for (int i = 0; i < graph.coursesNo; i++) {
+			output.write(graph.courses.get(i).courseCode + " " + graph.courses.get(i).roomNo + ls);
+		}
+		output.close();
+	}
+
+}
